@@ -14,6 +14,7 @@ use App\Models\RespaldoBd;
 use App\Models\RespaldoCorreo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use ZipArchive;
@@ -43,7 +44,7 @@ class BackupController extends Controller
         $tables = [
             'equipos' => Equipo::all()->toArray(),
             'incidentes' => Incidente::all()->toArray(),
-            'configuraciones' => Configuracion::all()->toArray(),
+            'configuraciones' => DB::table('configuraciones')->get()->toArray(),
             'mantenimientos' => Mantenimiento::all()->toArray(),
             'respaldos' => Respaldo::all()->toArray(),
             'respaldos_correos' => RespaldoCorreo::all()->toArray(),
