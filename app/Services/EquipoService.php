@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Area;
+use App\Models\Equipo;
 use App\Models\Puesto;
 use App\Repositories\EquipoRepository;
 use Illuminate\Http\Request;
@@ -96,6 +97,7 @@ class EquipoService extends BaseService
         ]);
 
         $validated['usuario_registra_id'] = auth()->id();
+        $this->syncAreaAndPuesto($validated);
         return $this->repository->create($validated);
     }
 
@@ -118,9 +120,26 @@ class EquipoService extends BaseService
             'observaciones' => 'nullable|string',
         ]);
 
+        $this->syncAreaAndPuesto($validated);
         $equipo->update($validated);
         AuditoriaService::registrar('actualizar', 'equipos', $equipo->id, "Equipo {$equipo->nombre_equipo} actualizado");
         return $equipo;
+    }
+
+    private function syncAreaAndPuesto(array &$validated): void
+    {
+        if (!empty($validated['area_id'])) {
+            $area = Area::find($validated['area_id']);
+            $validated['area'] = $area?->nombre ?? '';
+        } else {
+            $validated['area'] = $validated['area'] ?? '';
+        }
+        if (!empty($validated['puesto_id'])) {
+            $puesto = Puesto::find($validated['puesto_id']);
+            $validated['puesto_trabajo'] = $puesto?->nombre ?? '';
+        } else {
+            $validated['puesto_trabajo'] = $validated['puesto_trabajo'] ?? '';
+        }
     }
 
     public function exportExcel()
