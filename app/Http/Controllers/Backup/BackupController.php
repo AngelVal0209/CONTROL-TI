@@ -110,7 +110,7 @@ class BackupController extends Controller
         $data = json_decode(file_get_contents($jsonPath), true);
         if (!$data) {
             $this->cleanup($extractPath);
-            return back()->with('error', 'Formato de datos invÃ¡lido.');
+            return back()->with('error', 'Formato de datos invÃƒÂ¡lido.');
         }
 
         $modelMap = [
@@ -158,7 +158,7 @@ class BackupController extends Controller
         $this->cleanup($extractPath);
 
         if (!empty($errors)) {
-            return back()->with('warning', 'RestauraciÃ³n completada con errores: ' . implode('; ', array_slice($errors, 0, 5)));
+            return back()->with('warning', 'RestauraciÃƒÂ³n completada con errores: ' . implode('; ', array_slice($errors, 0, 5)));
         }
 
         return back()->with('success', 'Datos restaurados correctamente desde la copia de seguridad.');

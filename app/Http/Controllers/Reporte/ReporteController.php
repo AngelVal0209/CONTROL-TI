@@ -37,7 +37,7 @@ class ReporteController extends Controller
         ];
 
         if (!isset($exports[$tipo])) {
-            return back()->with('error', 'Tipo de exportaciÃ³n no vÃ¡lido.');
+            return back()->with('error', 'Tipo de exportaciÃƒÂ³n no vÃƒÂ¡lido.');
         }
 
         return Excel::download(new $exports[$tipo], "{$tipo}.xlsx");
@@ -51,7 +51,7 @@ class ReporteController extends Controller
                 'equipos' => Equipo::all(),
             ],
             'inventario-area' => [
-                'titulo' => 'Inventario de Equipos por Ãrea',
+                'titulo' => 'Inventario de Equipos por ÃƒÂrea',
                 'equipos' => Equipo::all()->groupBy('area'),
             ],
             'incidentes' => [

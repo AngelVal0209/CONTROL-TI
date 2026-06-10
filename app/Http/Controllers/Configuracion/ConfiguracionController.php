@@ -26,7 +26,7 @@ class ConfiguracionController extends Controller
     public function store(Request $request, Equipo $equipo)
     {
         $this->configuracionService->validateAndCreate($request, $equipo);
-        return redirect()->route('equipos.configuraciones.index', $equipo)->with('success', 'ConfiguraciÃ³n creada correctamente.');
+        return redirect()->route('equipos.configuraciones.index', $equipo)->with('success', 'ConfiguraciÃƒÂ³n creada correctamente.');
     }
 
     public function edit(Equipo $equipo, Configuracion $configuracion)
@@ -37,13 +37,13 @@ class ConfiguracionController extends Controller
     public function update(Request $request, Equipo $equipo, Configuracion $configuracion)
     {
         $this->configuracionService->validateAndUpdate($request, $equipo, $configuracion);
-        return redirect()->route('equipos.configuraciones.index', $equipo)->with('success', 'ConfiguraciÃ³n actualizada correctamente.');
+        return redirect()->route('equipos.configuraciones.index', $equipo)->with('success', 'ConfiguraciÃƒÂ³n actualizada correctamente.');
     }
 
     public function destroy(Equipo $equipo, Configuracion $configuracion)
     {
         $this->configuracionService->delete($configuracion);
-        return redirect()->route('equipos.configuraciones.index', $equipo)->with('success', 'ConfiguraciÃ³n eliminada correctamente.');
+        return redirect()->route('equipos.configuraciones.index', $equipo)->with('success', 'ConfiguraciÃƒÂ³n eliminada correctamente.');
     }
 
     public function historial(Configuracion $configuracion)
