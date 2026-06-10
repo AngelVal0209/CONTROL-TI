@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Equipo;
+use App\Http\Controllers\Controller;
 
 use App\Models\Area;
 use App\Models\Equipo;

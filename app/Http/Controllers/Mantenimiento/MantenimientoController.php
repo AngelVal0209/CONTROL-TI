@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Mantenimiento;
+use App\Http\Controllers\Controller;
 
 use App\Models\Mantenimiento;
 use App\Services\Mantenimiento\MantenimientoService;

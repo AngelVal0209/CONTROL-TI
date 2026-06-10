@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Reporte;
+use App\Http\Controllers\Controller;
 
 use App\Models\Equipo;
 use App\Models\Incidente;
@@ -37,7 +38,7 @@ class ReporteController extends Controller
         ];
 
         if (!isset($exports[$tipo])) {
-            return back()->with('error', 'Tipo de exportaciÃƒÂ³n no vÃƒÂ¡lido.');
+            return back()->with('error', 'Tipo de exportaciÃƒÆ’Ã‚Â³n no vÃƒÆ’Ã‚Â¡lido.');
         }
 
         return Excel::download(new $exports[$tipo], "{$tipo}.xlsx");
@@ -51,7 +52,7 @@ class ReporteController extends Controller
                 'equipos' => Equipo::all(),
             ],
             'inventario-area' => [
-                'titulo' => 'Inventario de Equipos por ÃƒÂrea',
+                'titulo' => 'Inventario de Equipos por ÃƒÆ’Ã‚Ârea',
                 'equipos' => Equipo::all()->groupBy('area'),
             ],
             'incidentes' => [

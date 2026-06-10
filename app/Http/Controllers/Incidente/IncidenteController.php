@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Incidente;
+use App\Http\Controllers\Controller;
 
 use App\Models\Incidente;
 use App\Services\Incidente\IncidenteService;

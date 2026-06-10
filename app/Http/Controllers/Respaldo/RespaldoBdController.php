@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Respaldo;
+use App\Http\Controllers\Controller;
 
 use App\Models\RespaldoBd;
 use App\Services\Respaldo\RespaldoBdService;

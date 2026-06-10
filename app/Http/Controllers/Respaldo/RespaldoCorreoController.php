@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Respaldo;
+use App\Http\Controllers\Controller;
 
 use App\Models\RespaldoCorreo;
 use App\Services\Respaldo\RespaldoCorreoService;

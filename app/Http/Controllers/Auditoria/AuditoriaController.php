@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Auditoria;
+use App\Http\Controllers\Controller;
 
 use App\Models\Auditoria;
 use App\Models\User;
