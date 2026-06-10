@@ -2,18 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\EquipoController;
-use App\Http\Controllers\IncidenteController;
-use App\Http\Controllers\ConfiguracionController;
-use App\Http\Controllers\MantenimientoController;
-use App\Http\Controllers\RespaldoController;
-use App\Http\Controllers\RespaldoCorreoController;
-use App\Http\Controllers\RespaldoBdController;
-use App\Http\Controllers\UsuarioController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ReporteController;
-use App\Http\Controllers\AuditoriaController;
-use App\Http\Controllers\BackupController;
+use App\Http\Controllers\Equipo\EquipoController;
+use App\Http\Controllers\Incidente\IncidenteController;
+use App\Http\Controllers\Configuracion\ConfiguracionController;
+use App\Http\Controllers\Mantenimiento\MantenimientoController;
+use App\Http\Controllers\Respaldo\RespaldoController;
+use App\Http\Controllers\Respaldo\RespaldoCorreoController;
+use App\Http\Controllers\Respaldo\RespaldoBdController;
+use App\Http\Controllers\Usuario\UsuarioController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Reporte\ReporteController;
+use App\Http\Controllers\Auditoria\AuditoriaController;
+use App\Http\Controllers\Backup\BackupController;
 
 // Auth
 Route::middleware('guest')->group(function () {
