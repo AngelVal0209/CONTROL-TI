@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ConfiguracionHistorial extends Model
 {
+    protected $table = 'configuraciones_historial';
+
     protected $fillable = [
         'configuracion_id',
         'campo_modificado',

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Configuracion extends Model
 {
+    protected $table = 'configuraciones';
+
     protected $fillable = [
         'equipo_id',
         'sistema_operativo',
