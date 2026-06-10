@@ -5,7 +5,9 @@ use App\Services\BaseService;
 
 use App\Models\Equipo;
 use App\Repositories\Respaldo\RespaldoRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class RespaldoService extends BaseService
@@ -78,7 +80,13 @@ class RespaldoService extends BaseService
             'tamano' => 'nullable|string',
             'responsable' => 'nullable|string',
             'observaciones' => 'nullable|string',
+            'archivo' => 'nullable|file|max:512000',
         ]);
+
+        if ($request->hasFile('archivo')) {
+            $path = $request->file('archivo')->store('respaldos', 'local');
+            $validated['archivo'] = $path;
+        }
 
         return parent::create($validated);
     }
@@ -93,9 +101,34 @@ class RespaldoService extends BaseService
             'tamano' => 'nullable|string',
             'responsable' => 'nullable|string',
             'observaciones' => 'nullable|string',
+            'archivo' => 'nullable|file|max:512000',
         ]);
 
+        if ($request->hasFile('archivo')) {
+            if ($respaldo->archivo) {
+                Storage::disk('local')->delete($respaldo->archivo);
+            }
+            $path = $request->file('archivo')->store('respaldos', 'local');
+            $validated['archivo'] = $path;
+        }
+
         return parent::update($respaldo, $validated);
+    }
+
+    public function delete(Model $respaldo): bool
+    {
+        if ($respaldo->archivo) {
+            Storage::disk('local')->delete($respaldo->archivo);
+        }
+        return parent::delete($respaldo);
+    }
+
+    public function download($respaldo)
+    {
+        if (!$respaldo->archivo || !Storage::disk('local')->exists($respaldo->archivo)) {
+            return back()->with('error', 'Archivo no encontrado.');
+        }
+        return Storage::disk('local')->download($respaldo->archivo);
     }
 }
 

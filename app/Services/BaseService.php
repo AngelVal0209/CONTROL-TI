@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\BaseRepository;
+use App\Services\Auditoria\AuditoriaService;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseService

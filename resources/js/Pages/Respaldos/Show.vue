@@ -21,6 +21,11 @@
             <Divider />
             <div class="flex justify-between"><span class="font-medium">Responsable:</span><span>{{ respaldo.responsable || '—' }}</span></div>
             <Divider />
+            <div v-if="respaldo.archivo" class="flex justify-between items-center">
+              <span class="font-medium">Archivo:</span>
+              <Button label="Descargar" icon="pi pi-download" severity="info" text @click="download(respaldo)" />
+            </div>
+            <Divider v-if="respaldo.archivo" />
             <div><span class="font-medium">Observaciones:</span></div>
             <p class="text-gray-700 whitespace-pre-wrap">{{ respaldo.observaciones || 'Sin observaciones' }}</p>
           </div>
@@ -56,8 +61,12 @@ import Divider from 'primevue/divider'
 
 defineOptions({ layout: DashboardLayout })
 
-defineProps({
+const props = defineProps({
   respaldo: Object,
 })
+
+function download(respaldo) {
+  window.open(`/respaldos/${respaldo.id}/download`, '_blank')
+}
 </script>
 

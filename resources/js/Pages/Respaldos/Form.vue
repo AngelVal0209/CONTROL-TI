@@ -4,7 +4,7 @@
       <Button icon="pi pi-arrow-left" severity="secondary" text @click="router.get('/respaldos')" />
       <h1 class="text-2xl font-bold">{{ respaldo ? 'Editar Respaldo' : 'Nuevo Respaldo' }}</h1>
     </div>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit" enctype="multipart/form-data">
       <Card>
         <template #content>
           <div class="flex flex-col gap-4">
@@ -21,6 +21,11 @@
               <div>
                 <label for="ubicacion" class="block text-sm font-medium mb-1">Ubicación</label>
                 <Dropdown id="ubicacion" v-model="form.ubicacion" :options="ubicacionOptions" placeholder="Seleccione ubicación" class="w-full" />
+              </div>
+              <div>
+                <label for="archivo" class="block text-sm font-medium mb-1">Archivo</label>
+                <FileUpload mode="basic" name="archivo" accept=".rar,.zip" :auto="false" :chooseLabel="archivoName || 'Seleccionar archivo'" class="w-full" @select="onFileSelect" />
+                <small v-if="respaldo?.archivo" class="text-gray-500 block mt-1">Archivo actual: {{ respaldo.archivo.split('/').pop() }}</small>
               </div>
               <div>
                 <label for="fecha_respaldo" class="block text-sm font-medium mb-1">Fecha del Respaldo</label>
@@ -55,6 +60,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 import Card from 'primevue/card'
@@ -62,6 +68,7 @@ import Dropdown from 'primevue/dropdown'
 import Textarea from 'primevue/textarea'
 import SelectButton from 'primevue/selectbutton'
 import Calendar from 'primevue/calendar'
+import FileUpload from 'primevue/fileupload'
 import Button from 'primevue/button'
 
 defineOptions({ layout: DashboardLayout })
@@ -76,6 +83,8 @@ const ubicacionOptions = ['local', 'red', 'nube', 'externo']
 const tamanoOptions = ['100 MB', '500 MB', '1 GB', '2 GB', '5 GB', '10 GB', '25 GB', '50 GB', '100 GB', '500 GB', '1 TB']
 const responsableOptions = ['Soporte TI', 'Administrador', 'Técnico A', 'Técnico B', 'Proveedor']
 
+const archivoName = ref(props.respaldo?.archivo ? props.respaldo.archivo.split('/').pop() : null)
+
 const form = useForm({
   equipo_id: props.respaldo?.equipo_id ?? null,
   tipo: props.respaldo?.tipo ?? 'completo',
@@ -84,13 +93,24 @@ const form = useForm({
   tamano: props.respaldo?.tamano ?? null,
   responsable: props.respaldo?.responsable ?? null,
   observaciones: props.respaldo?.observaciones ?? '',
+  archivo: null,
 })
+
+function onFileSelect(event) {
+  form.archivo = event.files[0]
+  archivoName.value = event.files[0].name
+}
 
 function submit() {
   if (props.respaldo) {
-    form.put(`/respaldos/${props.respaldo.id}`)
+    form.post(`/respaldos/${props.respaldo.id}`, {
+      _method: 'PUT',
+      forceFormData: true,
+    })
   } else {
-    form.post('/respaldos')
+    form.post('/respaldos', {
+      forceFormData: true,
+    })
   }
 }
 </script>

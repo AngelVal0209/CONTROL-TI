@@ -28,11 +28,12 @@
       <Column field="fecha_respaldo" header="Fecha" sortable></Column>
       <Column field="tamano" header="Tamaño" sortable></Column>
       <Column field="responsable" header="Responsable" sortable></Column>
-      <Column header="Acciones" style="width: 150px">
+      <Column header="Acciones" style="width: 200px">
         <template #body="{ data }">
           <div class="flex gap-1">
             <Button icon="pi pi-eye" severity="info" text @click="router.get(`/respaldos/${data.id}`)" />
             <Button icon="pi pi-pencil" severity="secondary" text @click="router.get(`/respaldos/${data.id}/edit`)" />
+            <Button v-if="data.archivo" icon="pi pi-download" severity="info" text @click="download(data)" />
             <Button icon="pi pi-trash" severity="danger" text @click="confirmDelete(data)" />
           </div>
         </template>
@@ -85,6 +86,10 @@ function applyFilters() {
 
 function onPage(event) {
   router.get('/respaldos', { page: event.page + 1, ...filters }, { preserveState: true, replace: true })
+}
+
+function download(respaldo) {
+  window.open(`/respaldos/${respaldo.id}/download`, '_blank')
 }
 
 function confirmDelete(respaldo) {

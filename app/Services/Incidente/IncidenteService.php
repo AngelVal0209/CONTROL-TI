@@ -5,6 +5,7 @@ use App\Services\BaseService;
 
 use App\Models\Equipo;
 use App\Repositories\Incidente\IncidenteRepository;
+use App\Services\Auditoria\AuditoriaService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

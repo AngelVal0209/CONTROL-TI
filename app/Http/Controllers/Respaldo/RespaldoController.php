@@ -50,6 +50,11 @@ class RespaldoController extends Controller
         $this->respaldoService->delete($respaldo);
         return redirect()->route('respaldos.index')->with('success', 'Respaldo eliminado correctamente.');
     }
+
+    public function download(Respaldo $respaldo)
+    {
+        return $this->respaldoService->download($respaldo);
+    }
 }
 
 

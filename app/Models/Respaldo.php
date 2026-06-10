@@ -15,6 +15,7 @@ class Respaldo extends Model
         'tamano',
         'responsable',
         'observaciones',
+        'archivo',
     ];
 
     public function equipo(): BelongsTo

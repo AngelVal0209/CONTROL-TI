@@ -3,6 +3,7 @@
 namespace App\Services\Usuario;
 
 use App\Models\User;
+use App\Services\Auditoria\AuditoriaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;

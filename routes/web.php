@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/respaldos/bd/{respaldoBd}', [RespaldoBdController::class, 'destroy'])->name('respaldos.bd.destroy');
     Route::get('/respaldos/bd/{respaldoBd}/download', [RespaldoBdController::class, 'download'])->name('respaldos.bd.download');
 
+    Route::get('/respaldos/{respaldo}/download', [RespaldoController::class, 'download'])->name('respaldos.download');
     Route::resource('respaldos', RespaldoController::class);
 
     // Backup completo del sistema

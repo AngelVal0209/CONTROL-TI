@@ -5,6 +5,7 @@ use App\Services\BaseService;
 
 use App\Models\Area;
 use App\Models\Equipo;
+use App\Services\Auditoria\AuditoriaService;
 use App\Models\Puesto;
 use App\Models\User;
 use App\Repositories\Equipo\EquipoRepository;
