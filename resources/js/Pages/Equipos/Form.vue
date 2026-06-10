@@ -55,7 +55,13 @@
               </div>
               <div>
                 <label for="propietario" class="block text-sm font-medium mb-1">Propietario</label>
-                <Dropdown id="propietario" v-model="form.propietario" :options="propietarioOptions" placeholder="Seleccione propietario" class="w-full" />
+                <Dropdown id="propietario" v-model="form.propietario" :options="propietarioOptions" placeholder="Seleccione propietario" class="w-full" @change="onPropietarioChange" />
+                <Transition name="p-toggleable-content">
+                  <div v-if="mostrarUsuario" class="mt-2">
+                    <label class="block text-sm font-medium mb-1">Seleccionar Usuario</label>
+                    <Dropdown v-model="form.propietario" :options="props.usuarios" optionLabel="label" optionValue="label" placeholder="Seleccione usuario registrado" class="w-full" filter />
+                  </div>
+                </Transition>
               </div>
               <div>
                 <label for="estado" class="block text-sm font-medium mb-1">Estado *</label>
@@ -148,12 +154,27 @@ const props = defineProps({
   puestos: Array,
   tipos: Array,
   marcas: Array,
+  usuarios: Array,
 })
 
 const estadoOptions = ['operativo', 'inactivo', 'en mantenimiento', 'de baja']
 const condicionOptions = ['bueno', 'regular', 'malo']
 const modeloOptions = ['EliteBook', 'ProBook', 'ThinkPad', 'Latitude', 'OptiPlex', 'MacBook Pro', 'MacBook Air', 'IdeaPad', 'Pavilion', 'Inspiron', 'Surface Pro', 'Vostro', 'ThinkCentre', 'ProDesk', 'Otro']
-const propietarioOptions = ['TI Metalarc', 'Metalarc S.A.', 'Tercero', 'Leasing', 'Particular']
+const propietarioOptions = ['TI Metalarc', 'Metalarc S.A.', 'Tercero', 'Leasing', 'Particular', 'USUARIO']
+const mostrarUsuario = ref(false)
+
+if (props.equipo?.propietario && props.usuarios?.some(u => u.label === props.equipo.propietario)) {
+  mostrarUsuario.value = true
+}
+
+function onPropietarioChange(value) {
+  if (value.value === 'USUARIO') {
+    mostrarUsuario.value = true
+    form.propietario = null
+  } else {
+    mostrarUsuario.value = false
+  }
+}
 
 const filteredPuestos = computed(() => {
   if (!props.puestos) return []

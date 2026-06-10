@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Area;
 use App\Models\Equipo;
 use App\Models\Puesto;
+use App\Models\User;
 use App\Repositories\EquipoRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,6 +24,10 @@ class EquipoService extends BaseService
         return [
             'areas' => Area::where('activo', true)->get(),
             'puestos' => Puesto::where('activo', true)->get(),
+            'usuarios' => User::where('activo', true)->get(['id', 'name', 'documento'])->map(fn ($u) => [
+                'id' => $u->id,
+                'label' => "{$u->name} ({$u->documento})"
+            ]),
             'tipos' => collect(['Computadora', 'Laptop', 'Servidor', 'Impresora', 'Switch', 'Router', 'Monitor', 'Tablet', 'Celular', 'Otro']),
             'marcas' => collect(['HP', 'Dell', 'Lenovo', 'Apple', 'Samsung', 'Canon', 'Epson', 'Cisco', 'Otro']),
         ];
