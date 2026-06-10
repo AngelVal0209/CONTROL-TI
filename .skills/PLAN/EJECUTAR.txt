@@ -1,0 +1,411 @@
+# PLAN MAESTRO - SISTEMA DE GESTIÓN TIC (DESKTOP)
+
+## 1. Objetivo General
+
+Desarrollar una aplicación de escritorio instalable para la gestión integral de activos TIC, incidentes, mantenimientos, respaldos y control de software.
+
+La aplicación deberá:
+
+* Funcionar sin internet.
+* Guardar toda la información en SQLite.
+* Permitir respaldos automáticos.
+* Importar y exportar Excel.
+* Generar reportes PDF.
+* Calcular KPIs automáticamente.
+* Migrarse fácilmente entre computadoras.
+
+---
+
+# 2. Stack Tecnológico
+
+## Backend
+
+* Laravel 12
+* PHP 8.4
+
+## Frontend
+
+* Vue 3
+* PrimeVue
+* Pinia
+
+## Escritorio
+
+* Tauri
+
+## Base de Datos
+
+* SQLite
+
+## Reportes
+
+* Laravel Excel
+* DomPDF
+
+---
+
+# 3. Estructura General
+
+Sistema Desktop
+
+├── Dashboard
+├── Inventario TIC
+├── Incidentes
+├── Software y Hardware
+├── Mantenimientos
+├── Respaldos
+├── Reportes
+├── KPIs
+├── Usuarios
+├── Configuración
+└── Auditoría
+
+---
+
+# 4. Módulo Inventario TIC
+
+Basado en:
+
+MTL-IT-PR-01.F01 - INVENTARIO EQUIPOS
+
+## Funciones
+
+* Registrar equipo
+* Editar equipo
+* Dar de baja
+* Buscar equipo
+* Filtrar
+* Exportar Excel
+* Importar Excel
+
+## Campos
+
+* Código
+* Serie
+* Nombre Equipo
+* Descripción
+* Tipo
+* Marca
+* Modelo
+* Propietario
+* Área
+* Puesto Trabajo
+* Estado
+* Condición
+* Fecha Adquisición
+* Observaciones
+
+## Tabla
+
+equipos
+
+---
+
+# 5. Módulo Incidentes
+
+Basado en:
+
+MTL-IT-PR-01.F02 - REGISTRO DE INCIDENTES
+
+## Funciones
+
+* Registrar incidente
+* Actualizar estado
+* Resolver incidente
+* Adjuntar evidencias
+* Exportar reporte
+
+## Estados
+
+* Pendiente
+* En Proceso
+* Resuelto
+* Cancelado
+
+## Prioridades
+
+* Baja
+* Media
+* Alta
+* Crítica
+
+## Tabla
+
+incidentes
+
+---
+
+# 6. Módulo Versiones de Software y Hardware
+
+Basado en:
+
+MTL-IT-PR-01.F03 - VERSIONES SOFTWARE Y CONFIGURACIONES
+
+## Funciones
+
+* Registrar software instalado
+* Registrar cambios hardware
+* Historial de actualizaciones
+
+## Tabla
+
+configuraciones
+
+Campos:
+
+* Equipo
+* Sistema Operativo
+* Versión
+* Office
+* Antivirus
+* CPU
+* RAM
+* Disco
+* Fecha Actualización
+
+---
+
+# 7. Módulo Mantenimiento
+
+Basado en KPI Mantenimiento
+
+## Funciones
+
+* Programar mantenimiento
+* Registrar mantenimiento
+* Historial
+
+Tipos:
+
+* Preventivo
+* Correctivo
+
+Tabla:
+
+mantenimientos
+
+---
+
+# 8. Módulo Respaldos
+
+Basado en KPI Respaldo TIC
+
+## Funciones
+
+* Registrar respaldo
+* Registrar ubicación
+* Historial
+
+Tipos:
+
+* Local
+* Nube
+* Externo
+
+Tabla:
+
+respaldos
+
+---
+
+# 9. Dashboard Principal
+
+## Indicadores
+
+Total Equipos
+
+Equipos Activos
+
+Equipos Inactivos
+
+Incidentes Pendientes
+
+Incidentes Resueltos
+
+Respaldos Realizados
+
+Mantenimientos Ejecutados
+
+---
+
+# 10. KPIs Automáticos
+
+## KPI Inventario
+
+* Total Equipos
+* Equipos Operativos
+* Equipos Inactivos
+
+## KPI Incidentes
+
+* Tiempo Promedio Resolución
+* Incidentes por Mes
+* Incidentes por Área
+
+## KPI Mantenimiento
+
+* % Equipos Mantenidos
+* Equipos Pendientes
+
+## KPI Respaldo
+
+* % Equipos Respaldados
+* Último Respaldo
+* Respaldos por Mes
+
+---
+
+# 11. Reportes
+
+## PDF
+
+* Inventario General
+* Inventario por Área
+* Incidentes
+* Mantenimientos
+* Respaldos
+
+## Excel
+
+* Exportación completa
+* Exportación filtrada
+
+---
+
+# 12. Gestión de Usuarios
+
+Roles:
+
+Administrador
+
+Soporte TIC
+
+Consulta
+
+---
+
+# 13. Auditoría
+
+Registrar:
+
+* Usuario
+* Acción
+* Fecha
+* Módulo
+* Registro afectado
+
+---
+
+# 14. Base de Datos
+
+usuarios
+
+equipos
+
+incidentes
+
+configuraciones
+
+mantenimientos
+
+respaldos
+
+auditoria
+
+---
+
+# 15. Backups
+
+Ubicación:
+
+/data/backups
+
+Funciones:
+
+* Backup Manual
+* Backup Automático
+* Restaurar Backup
+
+Formato:
+
+backup_YYYYMMDD.zip
+
+---
+
+# 16. Migración a Otra Laptop
+
+Paso 1:
+
+Exportar respaldo
+
+Paso 2:
+
+Copiar ZIP
+
+Paso 3:
+
+Instalar aplicación
+
+Paso 4:
+
+Restaurar respaldo
+
+Paso 5:
+
+Continuar trabajando
+
+---
+
+# 17. Fases de Desarrollo
+
+FASE 1
+
+* Login
+* Usuarios
+* Inventario
+
+FASE 2
+
+* Incidentes
+
+FASE 3
+
+* Software y Hardware
+
+FASE 4
+
+* Mantenimiento
+
+FASE 5
+
+* Respaldos
+
+FASE 6
+
+* Dashboard
+
+FASE 7
+
+* KPIs
+
+FASE 8
+
+* Reportes
+
+FASE 9
+
+* Auditoría
+
+FASE 10
+
+* Instalador Desktop
+
+---
+
+# 18. Objetivo Final
+
+Generar un único archivo instalable:
+
+MetalarcSetup.exe
+
+Con almacenamiento local SQLite y funcionamiento completamente offline.
