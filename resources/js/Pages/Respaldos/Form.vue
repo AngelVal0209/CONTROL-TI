@@ -20,7 +20,7 @@
               </div>
               <div>
                 <label for="ubicacion" class="block text-sm font-medium mb-1">Ubicación</label>
-                <Dropdown id="ubicacion" v-model="form.ubicacion" :options="ubicacionOptions" placeholder="Seleccione ubicación" class="w-full" />
+                <Dropdown id="ubicacion" v-model="form.ubicacion" :options="ubicacionOptions" placeholder="Seleccione ubicación" class="w-full" filter editable />
               </div>
               <div>
                 <label for="archivo" class="block text-sm font-medium mb-1">Archivo</label>

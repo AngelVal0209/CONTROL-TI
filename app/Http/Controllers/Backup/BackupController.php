@@ -9,10 +9,14 @@ use App\Models\Configuracion;
 use App\Models\Equipo;
 use App\Models\Incidente;
 use App\Models\Mantenimiento;
+use App\Models\Marca;
+use App\Models\Modelo;
 use App\Models\Puesto;
+use App\Models\Renovacion;
 use App\Models\Respaldo;
 use App\Models\RespaldoBd;
 use App\Models\RespaldoCorreo;
+use App\Models\Tipo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -50,9 +54,13 @@ class BackupController extends Controller
             'respaldos' => Respaldo::all()->toArray(),
             'respaldos_correos' => RespaldoCorreo::all()->toArray(),
             'respaldos_bd' => RespaldoBd::all()->toArray(),
+            'renovaciones' => Renovacion::all()->toArray(),
             'usuarios' => User::all()->toArray(),
             'areas' => Area::all()->toArray(),
             'puestos' => Puesto::all()->toArray(),
+            'tipos' => Tipo::all()->toArray(),
+            'marcas' => Marca::all()->toArray(),
+            'modelos' => Modelo::all()->toArray(),
             'auditoria' => Auditoria::all()->toArray(),
         ];
 
@@ -69,7 +77,7 @@ class BackupController extends Controller
         if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
             $zip->addFromString('datos.json', $json);
 
-            $directories = ['respaldos_correos', 'respaldos_bd'];
+            $directories = ['respaldos_correos', 'respaldos_bd', 'respaldos', 'renovaciones'];
             foreach ($directories as $dir) {
                 $files = Storage::disk('local')->files($dir);
                 foreach ($files as $file) {
@@ -89,7 +97,7 @@ class BackupController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'archivo' => 'required|file|mimes:zip|max:1024000',
+            'archivo' => 'required|file|mimes:zip,rar,7z,tar,gz,bak|max:1024000',
         ]);
 
         $zipFile = $request->file('archivo');
@@ -122,9 +130,13 @@ class BackupController extends Controller
             'respaldos' => Respaldo::class,
             'respaldos_correos' => RespaldoCorreo::class,
             'respaldos_bd' => RespaldoBd::class,
+            'renovaciones' => Renovacion::class,
             'usuarios' => User::class,
             'areas' => Area::class,
             'puestos' => Puesto::class,
+            'tipos' => Tipo::class,
+            'marcas' => Marca::class,
+            'modelos' => Modelo::class,
             'auditoria' => Auditoria::class,
         ];
 
@@ -141,7 +153,7 @@ class BackupController extends Controller
         }
 
         // Restore files
-        foreach (['respaldos_correos', 'respaldos_bd'] as $dir) {
+        foreach (['respaldos_correos', 'respaldos_bd', 'respaldos', 'renovaciones'] as $dir) {
             $srcDir = $extractPath . '/' . $dir;
             if (is_dir($srcDir)) {
                 $files = scandir($srcDir);

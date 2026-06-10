@@ -22,6 +22,7 @@ class Equipo extends Model
         'marca',
         'marca_id',
         'modelo',
+        'modelo_id',
         'propietario',
         'area',
         'area_id',
@@ -84,5 +85,10 @@ class Equipo extends Model
     public function marcaModel(): BelongsTo
     {
         return $this->belongsTo(Marca::class, 'marca_id');
+    }
+
+    public function modeloModel(): BelongsTo
+    {
+        return $this->belongsTo(Modelo::class, 'modelo_id');
     }
 }

@@ -1,6 +1,6 @@
 # 🖥️ TI Control - Sistema de Gestión de Activos TI
 
-Sistema web para la gestión integral de activos informáticos, desarrollado con **Laravel 12** + **Inertia.js** + **Vue 3** + **PrimeVue**.
+Sistema de escritorio/portable para la gestión integral de activos informáticos, desarrollado con **Laravel 12** + **Inertia.js** + **Vue 3** + **PrimeVue**.
 
 ## ✨ Características
 
@@ -13,9 +13,34 @@ Sistema web para la gestión integral de activos informáticos, desarrollado con
 - **Reportes**: Exportación a PDF y Excel
 - **Auditoría**: Trazabilidad completa de todas las acciones del sistema
 - **Roles**: Administrador, Soporte TIC y Consulta
+- **Renovaciones**: Control de licencias, suscripciones y vencimientos
+- **Backup/Restore**: Exportación e importación completa de datos y archivos (tipos, marcas, modelos, equipos, incidentes, configuraciones, mantenimientos, respaldos, renovaciones, usuarios, áreas, puestos, auditoría)
+- **Quick-create**: Catálogos con creación rápida (tipos, marcas, modelos, áreas, puestos)
+- **Notificaciones**: Alertas de renovaciones próximas a vencer
 - **Arquitectura N-Capas**: Repositorios + Servicios para escalabilidad
 
-## 🚀 Requisitos
+## 📦 Versión Portable (Desktop)
+
+Listo para ejecutar en Windows sin instalar PHP, Composer ni Node.js.
+
+### Requisitos
+- Windows 10/11 (64 bits)
+- Ningún otro requisito técnico
+
+### Instalación
+1. Descargar `TI-Control-Portable.zip` desde la sección de releases
+2. Extraer en cualquier carpeta (ej. `C:\TI Control`)
+3. Ejecutar `Instalar.bat` (descarga PHP automáticamente)
+4. Ejecutar `Iniciar.bat` para usar el sistema
+5. Usuario: `73823769` / Contraseña: `73823769`
+
+### Crear nuevo paquete portable
+```bash
+powershell -ExecutionPolicy Bypass -File build.ps1
+```
+Genera la carpeta `dist/` con PHP portable + app optimizada + instalador.
+
+## 🚀 Requisitos (Desarrollo)
 
 - PHP 8.2+
 - Composer 2+

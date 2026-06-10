@@ -11,33 +11,33 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label for="sistema_operativo" class="block text-sm font-medium mb-1">Sistema Operativo</label>
-              <Dropdown id="sistema_operativo" v-model="form.sistema_operativo" :options="soOptions" placeholder="Seleccione SO" class="w-full" :class="{ 'p-invalid': form.errors.sistema_operativo }" />
+              <Dropdown id="sistema_operativo" v-model="form.sistema_operativo" :options="soOptions" placeholder="Seleccione SO" class="w-full" filter editable :class="{ 'p-invalid': form.errors.sistema_operativo }" />
               <small v-if="form.errors.sistema_operativo" class="p-error">{{ form.errors.sistema_operativo }}</small>
             </div>
             <div>
               <label for="version" class="block text-sm font-medium mb-1">Versión SO</label>
-              <Dropdown id="version" v-model="form.version" :options="versionOptions" placeholder="Seleccione versión" class="w-full" :class="{ 'p-invalid': form.errors.version }" />
+              <Dropdown id="version" v-model="form.version" :options="versionOptions" placeholder="Seleccione versión" class="w-full" filter editable :class="{ 'p-invalid': form.errors.version }" />
               <small v-if="form.errors.version" class="p-error">{{ form.errors.version }}</small>
             </div>
             <div>
               <label for="office" class="block text-sm font-medium mb-1">Microsoft Office</label>
-              <Dropdown id="office" v-model="form.office" :options="officeOptions" placeholder="Seleccione versión Office" class="w-full" />
+              <Dropdown id="office" v-model="form.office" :options="officeOptions" placeholder="Seleccione versión Office" class="w-full" filter editable />
             </div>
             <div>
               <label for="antivirus" class="block text-sm font-medium mb-1">Antivirus</label>
-              <Dropdown id="antivirus" v-model="form.antivirus" :options="antivirusOptions" placeholder="Seleccione antivirus" class="w-full" />
+              <Dropdown id="antivirus" v-model="form.antivirus" :options="antivirusOptions" placeholder="Seleccione antivirus" class="w-full" filter editable />
             </div>
             <div>
               <label for="cpu" class="block text-sm font-medium mb-1">Procesador (CPU)</label>
-              <Dropdown id="cpu" v-model="form.cpu" :options="cpuOptions" placeholder="Seleccione CPU" class="w-full" />
+              <Dropdown id="cpu" v-model="form.cpu" :options="cpuOptions" placeholder="Seleccione CPU" class="w-full" filter editable />
             </div>
             <div>
               <label for="ram" class="block text-sm font-medium mb-1">Memoria RAM</label>
-              <Dropdown id="ram" v-model="form.ram" :options="ramOptions" placeholder="Seleccione RAM" class="w-full" />
+              <Dropdown id="ram" v-model="form.ram" :options="ramOptions" placeholder="Seleccione RAM" class="w-full" filter editable />
             </div>
             <div>
               <label for="disco" class="block text-sm font-medium mb-1">Almacenamiento (Disco)</label>
-              <Dropdown id="disco" v-model="form.disco" :options="discoOptions" placeholder="Seleccione disco" class="w-full" />
+              <Dropdown id="disco" v-model="form.disco" :options="discoOptions" placeholder="Seleccione disco" class="w-full" filter editable />
             </div>
             <div>
               <label for="fecha_actualizacion" class="block text-sm font-medium mb-1">Fecha Actualización</label>

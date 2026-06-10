@@ -6,6 +6,7 @@ use App\Services\BaseService;
 use App\Models\Area;
 use App\Models\Equipo;
 use App\Models\Marca;
+use App\Models\Modelo;
 use App\Models\Puesto;
 use App\Models\Tipo;
 use App\Models\User;
@@ -27,6 +28,7 @@ class EquipoService extends BaseService
     {
         $this->seedDefaultTipos();
         $this->seedDefaultMarcas();
+        $this->seedDefaultModelos();
 
         return [
             'areas' => Area::where('activo', true)->get(),
@@ -37,6 +39,7 @@ class EquipoService extends BaseService
             ]),
             'tipos' => Tipo::where('activo', true)->get(),
             'marcas' => Marca::where('activo', true)->get(),
+            'modelos' => Modelo::where('activo', true)->get(),
         ];
     }
 
@@ -58,12 +61,21 @@ class EquipoService extends BaseService
         }
     }
 
+    private function seedDefaultModelos(): void
+    {
+        if (Modelo::count() > 0) return;
+        $defaults = ['EliteBook', 'ProBook', 'ThinkPad', 'Latitude', 'OptiPlex', 'MacBook Pro', 'MacBook Air', 'IdeaPad', 'Pavilion', 'Inspiron', 'Surface Pro', 'Vostro', 'ThinkCentre', 'ProDesk', 'Otro'];
+        foreach ($defaults as $nombre) {
+            Modelo::create(['nombre' => $nombre]);
+        }
+    }
+
     public function indexData(Request $request)
     {
-        $query = $this->repository->query()->with(['areaModel', 'tipoModel', 'marcaModel', 'usuarioRegistra']);
+        $query = $this->repository->query()->with(['areaModel', 'tipoModel', 'marcaModel', 'modeloModel', 'usuarioRegistra']);
 
         if ($search = $request->get('global')) {
-            $query = $this->repository->search($search)->with(['areaModel', 'tipoModel', 'marcaModel', 'usuarioRegistra']);
+            $query = $this->repository->search($search)->with(['areaModel', 'tipoModel', 'marcaModel', 'modeloModel', 'usuarioRegistra']);
         }
 
         if ($areaId = $request->get('area_id')) {
@@ -104,6 +116,7 @@ class EquipoService extends BaseService
             'puestoModel',
             'tipoModel',
             'marcaModel',
+            'modeloModel',
             'usuarioRegistra',
         ]);
         return Inertia::render('Equipos/Show', ['equipo' => $equipo]);
@@ -118,6 +131,7 @@ class EquipoService extends BaseService
             'descripcion' => 'nullable|string',
             'tipo_id' => 'required|exists:tipos,id',
             'marca_id' => 'required|exists:marcas,id',
+            'modelo_id' => 'nullable|exists:modelos,id',
             'modelo' => 'nullable|string',
             'propietario' => 'nullable|string',
             'area_id' => 'nullable|exists:areas,id',
@@ -130,6 +144,7 @@ class EquipoService extends BaseService
         $validated['usuario_registra_id'] = auth()->id();
         $this->syncAreaAndPuesto($validated);
         $this->syncTipoAndMarca($validated);
+        $this->syncModelo($validated);
         $model = $this->repository->create($validated);
         $this->logAudit('crear', $model);
         return $model;
@@ -144,6 +159,7 @@ class EquipoService extends BaseService
             'descripcion' => 'nullable|string',
             'tipo_id' => 'required|exists:tipos,id',
             'marca_id' => 'required|exists:marcas,id',
+            'modelo_id' => 'nullable|exists:modelos,id',
             'modelo' => 'nullable|string',
             'propietario' => 'nullable|string',
             'area_id' => 'nullable|exists:areas,id',
@@ -155,6 +171,7 @@ class EquipoService extends BaseService
 
         $this->syncAreaAndPuesto($validated);
         $this->syncTipoAndMarca($validated);
+        $this->syncModelo($validated);
         $equipo->update($validated);
         $this->logAudit('actualizar', $equipo->fresh());
         return $equipo;
@@ -169,6 +186,14 @@ class EquipoService extends BaseService
         if (!empty($validated['marca_id'])) {
             $marca = Marca::find($validated['marca_id']);
             $validated['marca'] = $marca?->nombre ?? '';
+        }
+    }
+
+    private function syncModelo(array &$validated): void
+    {
+        if (!empty($validated['modelo_id'])) {
+            $modelo = Modelo::find($validated['modelo_id']);
+            $validated['modelo'] = $modelo?->nombre ?? '';
         }
     }
 

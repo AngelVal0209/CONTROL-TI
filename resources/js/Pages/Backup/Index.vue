@@ -21,7 +21,7 @@
           <p class="text-gray-600 mb-4">Selecciona un archivo .zip de copia de seguridad para restaurar todos los datos en el sistema.</p>
           <form @submit.prevent="restoreBackup">
             <div class="flex flex-col gap-3">
-              <FileUpload mode="basic" name="archivo" accept=".zip" :auto="false" chooseLabel="Seleccionar archivo .zip" class="w-full" @select="onFileSelect" />
+              <FileUpload mode="basic" name="archivo" accept=".zip,.rar,.7z,.tar,.gz,.bak" :auto="false" chooseLabel="Seleccionar archivo" class="w-full" @select="onFileSelect" />
               <Button type="submit" label="Restaurar Datos" icon="pi pi-upload" severity="warn" class="w-full" :disabled="!archivo" :loading="restoring" />
             </div>
           </form>

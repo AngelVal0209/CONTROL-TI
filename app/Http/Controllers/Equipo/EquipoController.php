@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Equipo;
 use App\Models\Marca;
+use App\Models\Modelo;
 use App\Models\Puesto;
 use App\Models\Tipo;
 use App\Services\Equipo\EquipoService;
@@ -102,6 +103,17 @@ class EquipoController extends Controller
 
         $marca = Marca::create($validated);
         return response()->json($marca, 201);
+    }
+
+    public function storeModelo(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|unique:modelos,nombre',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $modelo = Modelo::create($validated);
+        return response()->json($modelo, 201);
     }
 }
 

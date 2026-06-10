@@ -38,7 +38,7 @@
               </div>
               <div>
                 <label for="estado" class="block text-sm font-medium mb-1">Estado</label>
-                <Dropdown id="estado" v-model="form.estado" :options="estadoOptions" placeholder="Seleccione estado" class="w-full" />
+                <Dropdown id="estado" v-model="form.estado" :options="estadoOptions" placeholder="Seleccione estado" class="w-full" filter editable />
               </div>
             </div>
             <div>

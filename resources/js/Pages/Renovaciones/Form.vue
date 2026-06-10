@@ -20,12 +20,12 @@
               </div>
               <div>
                 <label for="tipo" class="block text-sm font-medium mb-1">Tipo *</label>
-                <Dropdown id="tipo" v-model="form.tipo" :options="tipoOptions" placeholder="Seleccione tipo" class="w-full" :class="{ 'p-invalid': form.errors.tipo }" />
+                <Dropdown id="tipo" v-model="form.tipo" :options="tipoOptions" placeholder="Seleccione tipo" class="w-full" filter editable :class="{ 'p-invalid': form.errors.tipo }" />
                 <small v-if="form.errors.tipo" class="p-error">{{ form.errors.tipo }}</small>
               </div>
               <div>
                 <label for="periodo" class="block text-sm font-medium mb-1">Período</label>
-                <Dropdown id="periodo" v-model="form.periodo" :options="periodoOptions" placeholder="Seleccione período" class="w-full" />
+                <Dropdown id="periodo" v-model="form.periodo" :options="periodoOptions" placeholder="Seleccione período" class="w-full" filter editable />
               </div>
               <div>
                 <label for="monto" class="block text-sm font-medium mb-1">Monto</label>
@@ -46,7 +46,7 @@
               </div>
               <div>
                 <label for="estado" class="block text-sm font-medium mb-1">Estado</label>
-                <Dropdown id="estado" v-model="form.estado" :options="estadoOptions" placeholder="Seleccione estado" class="w-full" />
+                <Dropdown id="estado" v-model="form.estado" :options="estadoOptions" placeholder="Seleccione estado" class="w-full" filter editable />
               </div>
               <div>
                 <label for="archivo" class="block text-sm font-medium mb-1">Archivo</label>

@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/equipos/puestos', [EquipoController::class, 'storePuesto'])->name('equipos.puestos.store');
     Route::post('/equipos/tipos', [EquipoController::class, 'storeTipo'])->name('equipos.tipos.store');
     Route::post('/equipos/marcas', [EquipoController::class, 'storeMarca'])->name('equipos.marcas.store');
+    Route::post('/equipos/modelos', [EquipoController::class, 'storeModelo'])->name('equipos.modelos.store');
 
     Route::get('/equipos/export/excel', [EquipoController::class, 'exportExcel'])->name('equipos.export.excel');
     Route::resource('equipos', EquipoController::class);
