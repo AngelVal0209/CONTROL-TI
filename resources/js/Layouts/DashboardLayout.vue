@@ -86,7 +86,11 @@ const menuItems = computed(() => {
     {
       label: 'Respaldos',
       icon: 'pi pi-database',
-      to: '/respaldos',
+      items: [
+        { label: 'Equipos', icon: 'pi pi-server', command: () => router.get('/respaldos') },
+        { label: 'Correos', icon: 'pi pi-envelope', command: () => router.get('/respaldos/correos') },
+        { label: 'Base de Datos', icon: 'pi pi-database', command: () => router.get('/respaldos/bd') },
+      ],
     },
     {
       label: 'Reportes',
@@ -110,6 +114,11 @@ const menuItems = computed(() => {
       label: 'Usuarios',
       icon: 'pi pi-users',
       to: '/usuarios',
+    })
+    items.push({
+      label: 'Copia de Seguridad',
+      icon: 'pi pi-shield',
+      to: '/backup',
     })
   }
 
