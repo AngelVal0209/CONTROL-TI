@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Configuracion;
+use App\Services\BaseService;
 
 use App\Models\Equipo;
 use App\Repositories\Configuracion\ConfiguracionRepository;
@@ -81,7 +82,7 @@ class ConfiguracionService extends BaseService
 
     protected function auditDetail(string $accion, $model): string
     {
-        return "ConfiguraciÃ³n {$accion}da para equipo #{$model->equipo_id}";
+        return "ConfiguraciÃƒÂ³n {$accion}da para equipo #{$model->equipo_id}";
     }
 }
 

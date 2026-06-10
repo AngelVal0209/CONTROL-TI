@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Incidente;
+use App\Repositories\BaseRepository;
 
 use App\Models\Incidente;
 

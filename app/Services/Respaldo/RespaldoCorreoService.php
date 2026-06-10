@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Respaldo;
+use App\Services\BaseService;
 
 use App\Repositories\Respaldo\RespaldoCorreoRepository;
 use Illuminate\Http\Request;

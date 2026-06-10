@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Respaldo;
+use App\Repositories\BaseRepository;
 
 use App\Models\RespaldoCorreo;
 

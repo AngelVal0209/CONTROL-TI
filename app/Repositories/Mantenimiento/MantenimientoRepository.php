@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Mantenimiento;
+use App\Repositories\BaseRepository;
 
 use App\Models\Mantenimiento;
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Configuracion;
+use App\Repositories\BaseRepository;
 
 use App\Models\Configuracion;
 

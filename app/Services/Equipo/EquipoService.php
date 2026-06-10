@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\Equipo;
+use App\Services\BaseService;
 
 use App\Models\Area;
 use App\Models\Equipo;

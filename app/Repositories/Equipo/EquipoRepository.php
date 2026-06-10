@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\Equipo;
+use App\Repositories\BaseRepository;
 
 use App\Models\Equipo;
 
