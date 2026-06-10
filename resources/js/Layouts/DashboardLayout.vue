@@ -85,12 +85,18 @@ const menuItems = computed(() => {
     },
     {
       label: 'Respaldos',
+      icon: 'pi pi-server',
+      to: '/respaldos',
+    },
+    {
+      label: 'Resp. Correos',
+      icon: 'pi pi-envelope',
+      to: '/respaldos/correos',
+    },
+    {
+      label: 'Resp. Base Datos',
       icon: 'pi pi-database',
-      items: [
-        { label: 'Equipos', icon: 'pi pi-server', command: () => router.get('/respaldos') },
-        { label: 'Correos', icon: 'pi pi-envelope', command: () => router.get('/respaldos/correos') },
-        { label: 'Base de Datos', icon: 'pi pi-database', command: () => router.get('/respaldos/bd') },
-      ],
+      to: '/respaldos/bd',
     },
     {
       label: 'Reportes',
