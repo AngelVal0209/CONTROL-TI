@@ -4,6 +4,7 @@ namespace App\Services\Respaldo;
 use App\Services\BaseService;
 
 use App\Repositories\Respaldo\RespaldoCorreoRepository;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -93,7 +94,7 @@ class RespaldoCorreoService extends BaseService
         return parent::update($respaldo, $validated);
     }
 
-    public function delete($respaldo)
+    public function delete(Model $respaldo): bool
     {
         if ($respaldo->archivo) {
             Storage::disk('local')->delete($respaldo->archivo);
