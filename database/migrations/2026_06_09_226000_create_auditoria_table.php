@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('auditoria', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('usuario_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('usuario_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('accion');
             $table->string('modulo');
             $table->integer('registro_id')->nullable();

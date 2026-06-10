@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('configuraciones_historial', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('configuracion_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('configuracion_id')->constrained('configuraciones')->cascadeOnDelete();
             $table->string('campo_modificado');
             $table->text('valor_anterior')->nullable();
             $table->text('valor_nuevo')->nullable();
-            $table->foreignId('usuario_id')->constrained()->nullOnDelete();
+            $table->foreignId('usuario_id')->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
     }
