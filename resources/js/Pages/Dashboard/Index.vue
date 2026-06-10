@@ -83,34 +83,21 @@
       </Card>
     </div>
 
-    <h2 class="text-xl font-bold text-gray-800 mt-2">Indicadores Clave (KPIs)</h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card class="shadow-md">
         <template #title>
           <div class="flex items-center gap-2">
             <i class="pi pi-desktop text-blue-500"></i>
-            <span class="font-semibold">KPI Inventario</span>
+            <span class="font-semibold">Estado de Equipos</span>
           </div>
         </template>
         <template #content>
-          <div class="flex flex-col gap-3">
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Total Equipos</span>
-              <Tag :value="kpis?.inventario?.total ?? 0" severity="info" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Operativos</span>
-              <Tag :value="kpis?.inventario?.operativos ?? 0" severity="success" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Inactivos</span>
-              <Tag :value="kpis?.inventario?.inactivos ?? 0" severity="danger" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">% Activos</span>
-              <Tag :value="`${kpis?.inventario?.porcentaje_activo ?? 0}%`" :severity="(kpis?.inventario?.porcentaje_activo ?? 0) >= 70 ? 'success' : 'warn'" />
-            </div>
+          <Chart type="doughnut" :data="inventarioChart" :options="doughnutOptions" class="w-full max-h-56" />
+          <div class="flex flex-wrap justify-center gap-3 mt-3 text-xs">
+            <span v-for="e in (kpis?.inventario?.estados ?? [])" :key="e.label" class="flex items-center gap-1">
+              <span class="w-3 h-3 rounded-full inline-block" :style="{ background: color(e.label) }"></span>
+              {{ e.label }}: <strong>{{ e.value }}</strong>
+            </span>
           </div>
         </template>
       </Card>
@@ -119,76 +106,39 @@
         <template #title>
           <div class="flex items-center gap-2">
             <i class="pi pi-exclamation-triangle text-yellow-500"></i>
-            <span class="font-semibold">KPI Incidentes</span>
+            <span class="font-semibold">Incidentes por Estado</span>
           </div>
         </template>
         <template #content>
-          <div class="flex flex-col gap-3">
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Tiempo Prom. Resolución</span>
-              <Tag :value="kpis?.incidentes?.tiempo_promedio ?? 'N/A'" severity="warn" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Incidentes por Mes</span>
-              <Tag :value="kpis?.incidentes?.por_mes ?? 0" severity="info" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Incidentes por Área</span>
-              <Tag :value="kpis?.incidentes?.por_area ?? 0" severity="info" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Tasa de Resolución</span>
-              <Tag :value="`${kpis?.incidentes?.tasa_resolucion ?? 0}%`" :severity="(kpis?.incidentes?.tasa_resolucion ?? 0) >= 70 ? 'success' : 'danger'" />
-            </div>
+          <Chart type="bar" :data="incidentesChart" :options="barOptions" class="w-full max-h-56" />
+          <div class="flex justify-center gap-4 mt-3 text-xs">
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-amber-500"></span> Pendientes: <strong>{{ kpis?.incidentes?.estados?.[0]?.value ?? 0 }}</strong></span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-blue-500"></span> En Proceso: <strong>{{ kpis?.incidentes?.estados?.[1]?.value ?? 0 }}</strong></span>
+            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full inline-block bg-green-500"></span> Resueltos: <strong>{{ kpis?.incidentes?.estados?.[2]?.value ?? 0 }}</strong></span>
           </div>
         </template>
       </Card>
 
-      <Card class="shadow-md">
+      <Card class="shadow-md lg:col-span-2">
         <template #title>
           <div class="flex items-center gap-2">
-            <i class="pi pi-wrench text-orange-500"></i>
-            <span class="font-semibold">KPI Mantenimiento</span>
+            <i class="pi pi-chart-line text-blue-500"></i>
+            <span class="font-semibold">Tendencias Mensuales</span>
           </div>
         </template>
         <template #content>
-          <div class="flex flex-col gap-3">
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">% Equipos Mantenidos</span>
-              <Tag :value="`${kpis?.mantenimiento?.porcentaje ?? 0}%`" :severity="(kpis?.mantenimiento?.porcentaje ?? 0) >= 80 ? 'success' : 'warn'" />
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <h4 class="text-xs text-gray-500 mb-1">Incidentes</h4>
+              <Chart type="line" :data="incidentesTrend" :options="lineOptions" class="w-full max-h-40" />
             </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Realizados</span>
-              <Tag :value="kpis?.mantenimiento?.realizados ?? 0" severity="success" />
+            <div>
+              <h4 class="text-xs text-gray-500 mb-1">Mantenimientos</h4>
+              <Chart type="line" :data="mantenimientoTrend" :options="lineOptions" class="w-full max-h-40" />
             </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Equipos Pendientes</span>
-              <Tag :value="kpis?.mantenimiento?.pendientes ?? 0" :severity="(kpis?.mantenimiento?.pendientes ?? 0) > 0 ? 'danger' : 'success'" />
-            </div>
-          </div>
-        </template>
-      </Card>
-
-      <Card class="shadow-md">
-        <template #title>
-          <div class="flex items-center gap-2">
-            <i class="pi pi-database text-purple-500"></i>
-            <span class="font-semibold">KPI Respaldo</span>
-          </div>
-        </template>
-        <template #content>
-          <div class="flex flex-col gap-3">
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">% Equipos Respaldados</span>
-              <Tag :value="`${kpis?.respaldo?.porcentaje ?? 0}%`" :severity="(kpis?.respaldo?.porcentaje ?? 0) >= 80 ? 'success' : 'warn'" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Último Respaldo</span>
-              <Tag :value="kpis?.respaldo?.ultimo ?? 'N/A'" severity="info" />
-            </div>
-            <div class="flex justify-between items-center p-2 bg-gray-50 rounded">
-              <span class="text-gray-700">Respaldos por Mes</span>
-              <Tag :value="kpis?.respaldo?.por_mes ?? 0" severity="info" />
+            <div>
+              <h4 class="text-xs text-gray-500 mb-1">Respaldos</h4>
+              <Chart type="line" :data="respaldoTrend" :options="lineOptions" class="w-full max-h-40" />
             </div>
           </div>
         </template>
@@ -198,15 +148,17 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import Card from 'primevue/card'
 import Tag from 'primevue/tag'
 import Button from 'primevue/button'
+import Chart from 'primevue/chart'
 import DashboardLayout from '@/Layouts/DashboardLayout.vue'
 
 defineOptions({ layout: DashboardLayout })
 
-defineProps({
+const props = defineProps({
   totalEquipos: Number,
   equiposActivos: Number,
   equiposInactivos: Number,
@@ -218,5 +170,107 @@ defineProps({
   respaldos: Number,
   mantenimientos: Number,
   kpis: Object,
+})
+
+const colors = {
+  'Operativos': '#22c55e',
+  'Inactivos': '#ef4444',
+  'En Mantenimiento': '#f59e0b',
+  'De Baja': '#6b7280',
+}
+
+function color(label) {
+  return colors[label] ?? '#6b7280'
+}
+
+const doughnutOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: { legend: { display: false } },
+  cutout: '60%',
+}
+
+const barOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: { legend: { display: false } },
+  scales: {
+    y: { beginAtZero: true, ticks: { stepSize: 1 } },
+  },
+}
+
+const lineOptions = {
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: { legend: { display: false } },
+  scales: {
+    y: { beginAtZero: true, ticks: { stepSize: 1 } },
+  },
+}
+
+const inventarioChart = computed(() => {
+  const estados = props.kpis?.inventario?.estados ?? []
+  return {
+    labels: estados.map(e => e.label),
+    datasets: [{
+      data: estados.map(e => e.value),
+      backgroundColor: ['#22c55e', '#ef4444', '#f59e0b', '#6b7280'],
+      borderWidth: 0,
+    }],
+  }
+})
+
+const incidentesChart = computed(() => {
+  const estados = props.kpis?.incidentes?.estados ?? []
+  return {
+    labels: estados.map(e => e.label),
+    datasets: [{
+      data: estados.map(e => e.value),
+      backgroundColor: ['#f59e0b', '#3b82f6', '#22c55e'],
+      borderWidth: 0,
+    }],
+  }
+})
+
+const incidentesTrend = computed(() => {
+  const t = props.kpis?.incidentes?.tendencias ?? { labels: [], data: [] }
+  return {
+    labels: t.labels,
+    datasets: [{
+      data: t.data,
+      borderColor: '#3b82f6',
+      backgroundColor: 'rgba(59,130,246,0.1)',
+      fill: true,
+      tension: 0.4,
+    }],
+  }
+})
+
+const mantenimientoTrend = computed(() => {
+  const t = props.kpis?.mantenimiento?.tendencias ?? { labels: [], data: [] }
+  return {
+    labels: t.labels,
+    datasets: [{
+      data: t.data,
+      borderColor: '#f59e0b',
+      backgroundColor: 'rgba(245,158,11,0.1)',
+      fill: true,
+      tension: 0.4,
+    }],
+  }
+})
+
+const respaldoTrend = computed(() => {
+  const t = props.kpis?.respaldo?.tendencias ?? { labels: [], data: [] }
+  return {
+    labels: t.labels,
+    datasets: [{
+      data: t.data,
+      borderColor: '#a855f7',
+      backgroundColor: 'rgba(168,85,247,0.1)',
+      fill: true,
+      tension: 0.4,
+    }],
+  }
 })
 </script>

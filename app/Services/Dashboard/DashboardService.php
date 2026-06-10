@@ -72,6 +72,12 @@ class DashboardService
                 'operativos' => $equiposActivos,
                 'inactivos' => $equiposInactivos,
                 'porcentaje_activo' => $totalEquipos > 0 ? round(($equiposActivos / $totalEquipos) * 100, 1) : 0,
+                'estados' => [
+                    ['label' => 'Operativos', 'value' => $equiposActivos],
+                    ['label' => 'Inactivos', 'value' => $equiposInactivos],
+                    ['label' => 'En Mantenimiento', 'value' => Equipo::where('estado', 'en mantenimiento')->count()],
+                    ['label' => 'De Baja', 'value' => Equipo::where('estado', 'de baja')->count()],
+                ],
             ],
             'incidentes' => [
                 'tiempo_promedio' => $this->getTiempoPromedioResolucion(),
@@ -80,18 +86,75 @@ class DashboardService
                     ->join('equipos', 'incidentes.equipo_id', '=', 'equipos.id')
                     ->count('incidentes.id'),
                 'tasa_resolucion' => $this->getTasaResolucion(),
+                'estados' => [
+                    ['label' => 'Pendientes', 'value' => Incidente::where('estado', 'pendiente')->count()],
+                    ['label' => 'En Proceso', 'value' => Incidente::where('estado', 'en_proceso')->count()],
+                    ['label' => 'Resueltos', 'value' => Incidente::where('estado', 'resuelto')->count()],
+                ],
+                'tendencias' => $this->getIncidentesMensuales(),
             ],
             'mantenimiento' => [
                 'porcentaje' => $totalEquipos > 0 ? round(($mantenimientosRealizados / $totalEquipos) * 100, 1) : 0,
                 'pendientes' => $mantenimientosPendientes,
                 'realizados' => $mantenimientosRealizados,
+                'estados' => [
+                    ['label' => 'Realizados', 'value' => $mantenimientosRealizados],
+                    ['label' => 'Pendientes', 'value' => $mantenimientosPendientes],
+                ],
+                'tendencias' => $this->getMantenimientosMensuales(),
             ],
             'respaldo' => [
                 'porcentaje' => $totalEquipos > 0 ? round(($respaldosTotales / $totalEquipos) * 100, 1) : 0,
                 'ultimo' => Respaldo::latest('fecha_respaldo')->value('fecha_respaldo'),
                 'por_mes' => $respaldosEsteMes,
+                'tendencias' => $this->getRespaldosMensuales(),
             ],
         ];
+    }
+
+    private function getIncidentesMensuales(): array
+    {
+        $meses = [];
+        $data = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $mes = $date->locale('es')->isoFormat('MMM');
+            $meses[] = $mes;
+            $data[] = Incidente::whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->count();
+        }
+        return ['labels' => $meses, 'data' => $data];
+    }
+
+    private function getMantenimientosMensuales(): array
+    {
+        $meses = [];
+        $data = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $mes = $date->locale('es')->isoFormat('MMM');
+            $meses[] = $mes;
+            $data[] = Mantenimiento::whereYear('fecha_programada', $date->year)
+                ->whereMonth('fecha_programada', $date->month)
+                ->count();
+        }
+        return ['labels' => $meses, 'data' => $data];
+    }
+
+    private function getRespaldosMensuales(): array
+    {
+        $meses = [];
+        $data = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $mes = $date->locale('es')->isoFormat('MMM');
+            $meses[] = $mes;
+            $data[] = Respaldo::whereYear('fecha_respaldo', $date->year)
+                ->whereMonth('fecha_respaldo', $date->month)
+                ->count();
+        }
+        return ['labels' => $meses, 'data' => $data];
     }
 
     private function getTiempoPromedioResolucion()
