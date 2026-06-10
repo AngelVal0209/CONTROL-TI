@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,9 @@ class Equipo extends Model
         'nombre_equipo',
         'descripcion',
         'tipo',
+        'tipo_id',
         'marca',
+        'marca_id',
         'modelo',
         'propietario',
         'area',
@@ -30,6 +33,13 @@ class Equipo extends Model
         'observaciones',
         'usuario_registra_id',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'fecha_adquisicion' => 'date',
+        ];
+    }
 
     public function incidentes(): HasMany
     {
@@ -51,18 +61,28 @@ class Equipo extends Model
         return $this->hasMany(Respaldo::class);
     }
 
-    public function usuarioRegistra()
+    public function usuarioRegistra(): BelongsTo
     {
         return $this->belongsTo(User::class, 'usuario_registra_id');
     }
 
-    public function areaModel()
+    public function areaModel(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_id');
     }
 
-    public function puestoModel()
+    public function puestoModel(): BelongsTo
     {
         return $this->belongsTo(Puesto::class, 'puesto_id');
+    }
+
+    public function tipoModel(): BelongsTo
+    {
+        return $this->belongsTo(Tipo::class, 'tipo_id');
+    }
+
+    public function marcaModel(): BelongsTo
+    {
+        return $this->belongsTo(Marca::class, 'marca_id');
     }
 }

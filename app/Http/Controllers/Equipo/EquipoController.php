@@ -5,7 +5,9 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Area;
 use App\Models\Equipo;
+use App\Models\Marca;
 use App\Models\Puesto;
+use App\Models\Tipo;
 use App\Services\Equipo\EquipoService;
 use Illuminate\Http\Request;
 
@@ -78,6 +80,28 @@ class EquipoController extends Controller
 
         $puesto = Puesto::create($validated);
         return response()->json($puesto, 201);
+    }
+
+    public function storeTipo(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|unique:tipos,nombre',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $tipo = Tipo::create($validated);
+        return response()->json($tipo, 201);
+    }
+
+    public function storeMarca(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|unique:marcas,nombre',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $marca = Marca::create($validated);
+        return response()->json($marca, 201);
     }
 }
 

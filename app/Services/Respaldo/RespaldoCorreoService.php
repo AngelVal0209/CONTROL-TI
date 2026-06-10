@@ -107,7 +107,7 @@ class RespaldoCorreoService extends BaseService
         if (!$respaldo->archivo || !Storage::disk('local')->exists($respaldo->archivo)) {
             return back()->with('error', 'Archivo no encontrado.');
         }
-        return Storage::disk('local')->download($respaldo->archivo);
+        return Storage::disk('local')->download($respaldo->archivo, $respaldo->nombre . '.' . pathinfo($respaldo->archivo, PATHINFO_EXTENSION));
     }
 
     private function formatBytes($bytes, $precision = 2): string

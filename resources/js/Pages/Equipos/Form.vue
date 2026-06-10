@@ -25,14 +25,20 @@
                 <small v-if="form.errors.nombre_equipo" class="p-error">{{ form.errors.nombre_equipo }}</small>
               </div>
               <div>
-                <label for="tipo" class="block text-sm font-medium mb-1">Tipo *</label>
-                <Dropdown id="tipo" v-model="form.tipo" :options="tipos" placeholder="Seleccione tipo" class="w-full" :class="{ 'p-invalid': form.errors.tipo }" />
-                <small v-if="form.errors.tipo" class="p-error">{{ form.errors.tipo }}</small>
+                <label for="tipo_id" class="block text-sm font-medium mb-1">Tipo *</label>
+                <div class="flex gap-2">
+                  <Dropdown id="tipo_id" v-model="form.tipo_id" :options="tipos" optionLabel="nombre" optionValue="id" placeholder="Seleccione tipo" class="w-full" :class="{ 'p-invalid': form.errors.tipo_id }" filter />
+                  <Button icon="pi pi-plus" severity="secondary" @click="openTipoDialog" type="button" />
+                </div>
+                <small v-if="form.errors.tipo_id" class="p-error">{{ form.errors.tipo_id }}</small>
               </div>
               <div>
-                <label for="marca" class="block text-sm font-medium mb-1">Marca *</label>
-                <Dropdown id="marca" v-model="form.marca" :options="marcas" placeholder="Seleccione marca" class="w-full" :class="{ 'p-invalid': form.errors.marca }" />
-                <small v-if="form.errors.marca" class="p-error">{{ form.errors.marca }}</small>
+                <label for="marca_id" class="block text-sm font-medium mb-1">Marca *</label>
+                <div class="flex gap-2">
+                  <Dropdown id="marca_id" v-model="form.marca_id" :options="marcas" optionLabel="nombre" optionValue="id" placeholder="Seleccione marca" class="w-full" :class="{ 'p-invalid': form.errors.marca_id }" filter />
+                  <Button icon="pi pi-plus" severity="secondary" @click="openMarcaDialog" type="button" />
+                </div>
+                <small v-if="form.errors.marca_id" class="p-error">{{ form.errors.marca_id }}</small>
               </div>
               <div>
                 <label for="modelo" class="block text-sm font-medium mb-1">Modelo</label>
@@ -75,16 +81,16 @@
               </div>
               <div>
                 <label for="fecha_adquisicion" class="block text-sm font-medium mb-1">Fecha de Adquisición</label>
-                <Calendar id="fecha_adquisicion" v-model="form.fecha_adquisicion" showIcon dateFormat="dd/mm/yy" class="w-full" />
+                <Calendar id="fecha_adquisicion" v-model="form.fecha_adquisicion" showIcon dateFormat="dd/mm/yy" class="w-full" @date-select="onFechaChange" @input="onFechaChange" />
+              </div>
+              <div v-if="tiempoUso">
+                <label class="block text-sm font-medium mb-1">Tiempo de Uso</label>
+                <InputText :value="tiempoUso" class="w-full" disabled />
               </div>
             </div>
             <div>
               <label for="descripcion" class="block text-sm font-medium mb-1">Descripción</label>
               <Textarea id="descripcion" v-model="form.descripcion" rows="2" class="w-full" />
-            </div>
-            <div>
-              <label for="observaciones" class="block text-sm font-medium mb-1">Observaciones</label>
-              <Textarea id="observaciones" v-model="form.observaciones" rows="2" class="w-full" />
             </div>
           </div>
         </template>
@@ -111,6 +117,40 @@
       <template #footer>
         <Button label="Cancelar" severity="secondary" @click="areaDialog = false" />
         <Button label="Guardar" icon="pi pi-check" :loading="savingArea" @click="saveArea" />
+      </template>
+    </Dialog>
+
+    <Dialog v-model:visible="tipoDialog" header="Nuevo Tipo" modal class="w-full max-w-sm">
+      <div class="flex flex-col gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Nombre del Tipo</label>
+          <InputText v-model="newTipo.nombre" class="w-full" autofocus />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Descripción</label>
+          <Textarea v-model="newTipo.descripcion" rows="2" class="w-full" />
+        </div>
+      </div>
+      <template #footer>
+        <Button label="Cancelar" severity="secondary" @click="tipoDialog = false" />
+        <Button label="Guardar" icon="pi pi-check" :loading="savingTipo" @click="saveTipo" />
+      </template>
+    </Dialog>
+
+    <Dialog v-model:visible="marcaDialog" header="Nueva Marca" modal class="w-full max-w-sm">
+      <div class="flex flex-col gap-3">
+        <div>
+          <label class="block text-sm font-medium mb-1">Nombre de la Marca</label>
+          <InputText v-model="newMarca.nombre" class="w-full" autofocus />
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Descripción</label>
+          <Textarea v-model="newMarca.descripcion" rows="2" class="w-full" />
+        </div>
+      </div>
+      <template #footer>
+        <Button label="Cancelar" severity="secondary" @click="marcaDialog = false" />
+        <Button label="Guardar" icon="pi pi-check" :loading="savingMarca" @click="saveMarca" />
       </template>
     </Dialog>
 
@@ -182,13 +222,33 @@ const filteredPuestos = computed(() => {
   return props.puestos.filter(p => !p.area_id || p.area_id === form.area_id)
 })
 
+function calcularTiempoUso(fecha) {
+  if (!fecha) return null
+  const adq = new Date(fecha)
+  const hoy = new Date()
+  if (adq > hoy) return '—'
+  let años = hoy.getFullYear() - adq.getFullYear()
+  let meses = hoy.getMonth() - adq.getMonth()
+  if (meses < 0) { años--; meses += 12 }
+  const partes = []
+  if (años > 0) partes.push(`${años} año${años !== 1 ? 's' : ''}`)
+  if (meses > 0) partes.push(`${meses} mes${meses !== 1 ? 'es' : ''}`)
+  return partes.length ? partes.join(', ') : '< 1 mes'
+}
+
+const tiempoUso = computed(() => calcularTiempoUso(form.fecha_adquisicion))
+
+function onFechaChange() {
+  // reactividad: el computed se actualiza solo
+}
+
 const form = useForm({
   codigo: props.equipo?.codigo ?? '',
   serie: props.equipo?.serie ?? '',
   nombre_equipo: props.equipo?.nombre_equipo ?? '',
   descripcion: props.equipo?.descripcion ?? '',
-  tipo: props.equipo?.tipo ?? null,
-  marca: props.equipo?.marca ?? null,
+  tipo_id: props.equipo?.tipo_id ?? null,
+  marca_id: props.equipo?.marca_id ?? null,
   modelo: props.equipo?.modelo ?? null,
   propietario: props.equipo?.propietario ?? null,
   area_id: props.equipo?.area_id ?? null,
@@ -196,15 +256,20 @@ const form = useForm({
   estado: props.equipo?.estado ?? 'operativo',
   condicion: props.equipo?.condicion ?? 'bueno',
   fecha_adquisicion: props.equipo?.fecha_adquisicion ?? null,
-  observaciones: props.equipo?.observaciones ?? '',
 })
 
 const areaDialog = ref(false)
 const puestoDialog = ref(false)
+const tipoDialog = ref(false)
+const marcaDialog = ref(false)
 const savingArea = ref(false)
 const savingPuesto = ref(false)
+const savingTipo = ref(false)
+const savingMarca = ref(false)
 const newArea = ref({ nombre: '', descripcion: '' })
 const newPuesto = ref({ nombre: '', descripcion: '' })
+const newTipo = ref({ nombre: '', descripcion: '' })
+const newMarca = ref({ nombre: '', descripcion: '' })
 
 function openAreaDialog() {
   newArea.value = { nombre: '', descripcion: '' }
@@ -239,6 +304,42 @@ function savePuesto() {
     alert(err.response?.data?.message || 'Error al crear puesto')
   }).finally(() => {
     savingPuesto.value = false
+  })
+}
+
+function openTipoDialog() {
+  newTipo.value = { nombre: '', descripcion: '' }
+  tipoDialog.value = true
+}
+
+function saveTipo() {
+  savingTipo.value = true
+  axios.post('/equipos/tipos', newTipo.value).then(res => {
+    props.tipos.push(res.data)
+    form.tipo_id = res.data.id
+    tipoDialog.value = false
+  }).catch(err => {
+    alert(err.response?.data?.message || 'Error al crear tipo')
+  }).finally(() => {
+    savingTipo.value = false
+  })
+}
+
+function openMarcaDialog() {
+  newMarca.value = { nombre: '', descripcion: '' }
+  marcaDialog.value = true
+}
+
+function saveMarca() {
+  savingMarca.value = true
+  axios.post('/equipos/marcas', newMarca.value).then(res => {
+    props.marcas.push(res.data)
+    form.marca_id = res.data.id
+    marcaDialog.value = false
+  }).catch(err => {
+    alert(err.response?.data?.message || 'Error al crear marca')
+  }).finally(() => {
+    savingMarca.value = false
   })
 }
 

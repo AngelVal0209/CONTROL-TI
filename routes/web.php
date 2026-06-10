@@ -14,6 +14,7 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Reporte\ReporteController;
 use App\Http\Controllers\Auditoria\AuditoriaController;
 use App\Http\Controllers\Backup\BackupController;
+use App\Http\Controllers\Renovacion\RenovacionController;
 
 // Auth
 Route::middleware('guest')->group(function () {
@@ -31,9 +32,11 @@ Route::middleware(['auth'])->group(function () {
     // Areas & Puestos quick create
     Route::post('/equipos/areas', [EquipoController::class, 'storeArea'])->name('equipos.areas.store');
     Route::post('/equipos/puestos', [EquipoController::class, 'storePuesto'])->name('equipos.puestos.store');
+    Route::post('/equipos/tipos', [EquipoController::class, 'storeTipo'])->name('equipos.tipos.store');
+    Route::post('/equipos/marcas', [EquipoController::class, 'storeMarca'])->name('equipos.marcas.store');
 
-    Route::resource('equipos', EquipoController::class);
     Route::get('/equipos/export/excel', [EquipoController::class, 'exportExcel'])->name('equipos.export.excel');
+    Route::resource('equipos', EquipoController::class);
 
     Route::resource('incidentes', IncidenteController::class);
     Route::patch('/incidentes/{incidente}/resolver', [IncidenteController::class, 'resolver'])->name('incidentes.resolver');
@@ -80,6 +83,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reportes/excel/{tipo}', [ReporteController::class, 'excel'])->name('reportes.excel');
 
     Route::get('auditoria', [AuditoriaController::class, 'index'])->name('auditoria.index');
+
+    Route::get('/renovaciones/{renovacion}/download', [RenovacionController::class, 'download'])->name('renovaciones.download');
+    Route::resource('renovaciones', RenovacionController::class);
+    Route::get('/notificaciones/renovaciones', [RenovacionController::class, 'notificaciones'])->name('notificaciones.renovaciones');
 
     Route::get('/kpis', [DashboardController::class, 'kpis'])->name('kpis.index');
 });

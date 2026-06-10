@@ -18,7 +18,7 @@ return new class extends Migration
     {
         Schema::table('auditoria', function (Blueprint $table) {
             $table->dropForeign(['usuario_id']);
-            $table->foreign('usuario_id')->references('id')->on('usuarios')->nullOnDelete();
+            $table->foreign('usuario_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 };

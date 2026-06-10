@@ -32,22 +32,18 @@ class RespaldoBdController extends Controller
 
     public function show($respaldoBd)
     {
-        return $this->respaldoBdService
-            ->setModel(RespaldoBd::findOrFail($respaldoBd))
-            ->showData(RespaldoBd::findOrFail($respaldoBd));
+        return $this->respaldoBdService->showData(RespaldoBd::findOrFail($respaldoBd));
     }
 
     public function edit($respaldoBd)
     {
-        return $this->respaldoBdService
-            ->setModel(RespaldoBd::findOrFail($respaldoBd))
-            ->editData(RespaldoBd::findOrFail($respaldoBd));
+        return $this->respaldoBdService->editData(RespaldoBd::findOrFail($respaldoBd));
     }
 
     public function update(Request $request, $respaldoBd)
     {
         $respaldo = RespaldoBd::findOrFail($respaldoBd);
-        $this->respaldoBdService->setModel($respaldo)->validateAndUpdate($request, $respaldo);
+        $this->respaldoBdService->validateAndUpdate($request, $respaldo);
         return redirect()->route('respaldos.bd.index')
             ->with('success', 'Respaldo de BD actualizado correctamente.');
     }
@@ -55,7 +51,7 @@ class RespaldoBdController extends Controller
     public function destroy($respaldoBd)
     {
         $respaldo = RespaldoBd::findOrFail($respaldoBd);
-        $this->respaldoBdService->setModel($respaldo)->delete($respaldo);
+        $this->respaldoBdService->delete($respaldo);
         return redirect()->route('respaldos.bd.index')
             ->with('success', 'Respaldo de BD eliminado correctamente.');
     }
@@ -63,7 +59,7 @@ class RespaldoBdController extends Controller
     public function download($respaldoBd)
     {
         $respaldo = RespaldoBd::findOrFail($respaldoBd);
-        return $this->respaldoBdService->setModel($respaldo)->download($respaldo);
+        return $this->respaldoBdService->download($respaldo);
     }
 }
 

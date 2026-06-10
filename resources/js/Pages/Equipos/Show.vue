@@ -15,9 +15,9 @@
             <Divider />
             <div class="flex justify-between"><span class="font-medium">Serie:</span><span>{{ equipo.serie }}</span></div>
             <Divider />
-            <div class="flex justify-between"><span class="font-medium">Tipo:</span><span>{{ equipo.tipo }}</span></div>
+            <div class="flex justify-between"><span class="font-medium">Tipo:</span><span>{{ equipo.tipo_model?.nombre || equipo.tipo || '—' }}</span></div>
             <Divider />
-            <div class="flex justify-between"><span class="font-medium">Marca:</span><span>{{ equipo.marca }}</span></div>
+            <div class="flex justify-between"><span class="font-medium">Marca:</span><span>{{ equipo.marca_model?.nombre || equipo.marca || '—' }}</span></div>
             <Divider />
             <div class="flex justify-between"><span class="font-medium">Modelo:</span><span>{{ equipo.modelo || '—' }}</span></div>
             <Divider />
@@ -31,11 +31,11 @@
             <Divider />
             <div class="flex justify-between"><span class="font-medium">Fecha Adquisición:</span><span>{{ equipo.fecha_adquisicion || '—' }}</span></div>
             <Divider />
+            <div class="flex justify-between"><span class="font-medium">Tiempo de Uso:</span><span>{{ calcularTiempoUso(equipo.fecha_adquisicion) }}</span></div>
+            <Divider />
             <div class="flex justify-between"><span class="font-medium">Registrado por:</span><span>{{ equipo.usuario_registra?.name || '—' }}</span></div>
             <Divider />
             <div class="flex justify-between"><span class="font-medium">Descripción:</span><span>{{ equipo.descripcion || '—' }}</span></div>
-            <Divider />
-            <div class="flex justify-between"><span class="font-medium">Observaciones:</span><span>{{ equipo.observaciones || '—' }}</span></div>
           </div>
         </template>
         <template #footer>
@@ -135,5 +135,19 @@ function estadoSeverity(estado) {
 function condicionSeverity(condicion) {
   const map = { bueno: 'success', regular: 'warn', malo: 'danger' }
   return map[condicion] || null
+}
+
+function calcularTiempoUso(fecha) {
+  if (!fecha) return '—'
+  const adq = new Date(fecha)
+  const hoy = new Date()
+  if (adq > hoy) return '—'
+  let años = hoy.getFullYear() - adq.getFullYear()
+  let meses = hoy.getMonth() - adq.getMonth()
+  if (meses < 0) { años--; meses += 12 }
+  const partes = []
+  if (años > 0) partes.push(`${años} año${años !== 1 ? 's' : ''}`)
+  if (meses > 0) partes.push(`${meses} mes${meses !== 1 ? 'es' : ''}`)
+  return partes.length ? partes.join(', ') : '< 1 mes'
 }
 </script>

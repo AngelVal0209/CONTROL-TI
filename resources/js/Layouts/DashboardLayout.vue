@@ -25,6 +25,12 @@
         </template>
         <template #end>
           <div class="flex items-center gap-4">
+            <div class="relative" @click="toggleNotificaciones" style="cursor: pointer;">
+              <i class="pi pi-bell text-xl text-gray-600"></i>
+              <span v-if="notificacionesCount > 0" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {{ notificacionesCount }}
+              </span>
+            </div>
             <Tag v-if="user?.roles?.[0]" :value="user.roles[0]" severity="info" />
             <Avatar :label="user?.name?.charAt(0)?.toUpperCase()" shape="circle" size="small" class="bg-primary text-white" />
             <div class="hidden md:block">
@@ -35,6 +41,30 @@
           </div>
         </template>
       </Toolbar>
+      <div v-if="showNotificaciones" class="fixed inset-0 z-40" @click="showNotificaciones = false"></div>
+      <div v-if="showNotificaciones" class="fixed top-14 right-4 w-80 bg-white shadow-xl border rounded-lg z-50 max-h-96 overflow-auto">
+        <div class="p-3 border-b font-semibold text-sm flex justify-between items-center">
+          <span>Notificaciones</span>
+          <span v-if="notificacionesCount > 0" class="text-xs text-gray-500">{{ notificacionesCount }} pendientes</span>
+        </div>
+        <div v-if="notificacionesVencidos.length > 0" class="p-2">
+          <div class="text-xs font-semibold text-red-600 mb-1 px-2">Vencidos</div>
+          <div v-for="item in notificacionesVencidos" :key="'v-'+item.id" class="px-2 py-1.5 hover:bg-red-50 rounded cursor-pointer text-sm" @click="irARenovacion(item)">
+            <span class="font-medium">{{ item.nombre }}</span>
+            <span class="text-xs text-red-500 block">Vencido el {{ item.fecha_vencimiento }}</span>
+          </div>
+        </div>
+        <div v-if="notificacionesProximos.length > 0" class="p-2">
+          <div class="text-xs font-semibold text-yellow-600 mb-1 px-2">Próximos a vencer</div>
+          <div v-for="item in notificacionesProximos" :key="'p-'+item.id" class="px-2 py-1.5 hover:bg-yellow-50 rounded cursor-pointer text-sm" @click="irARenovacion(item)">
+            <span class="font-medium">{{ item.nombre }}</span>
+            <span class="text-xs text-yellow-600 block">{{ item.fecha_vencimiento }}</span>
+          </div>
+        </div>
+        <div v-if="notificacionesCount === 0" class="p-6 text-center text-gray-400 text-sm">
+          No hay notificaciones pendientes
+        </div>
+      </div>
       <div class="flex-1 p-6 overflow-auto">
         <slot />
       </div>
@@ -43,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { usePage, router } from '@inertiajs/vue3'
 import Sidebar from 'primevue/sidebar'
 import PanelMenu from 'primevue/panelmenu'
@@ -52,9 +82,39 @@ import Toolbar from 'primevue/toolbar'
 import Button from 'primevue/button'
 import Avatar from 'primevue/avatar'
 import Tag from 'primevue/tag'
+import axios from 'axios'
 
 const sidebarVisible = ref(true)
 const user = computed(() => usePage().props.auth?.user)
+
+const showNotificaciones = ref(false)
+const notificacionesProximos = ref([])
+const notificacionesVencidos = ref([])
+const notificacionesCount = computed(() => notificacionesProximos.value.length + notificacionesVencidos.value.length)
+
+function cargarNotificaciones() {
+  axios.get('/notificaciones/renovaciones').then(res => {
+    notificacionesProximos.value = res.data.proximos || []
+    notificacionesVencidos.value = res.data.vencidos || []
+  }).catch(() => {})
+}
+
+function toggleNotificaciones() {
+  showNotificaciones.value = !showNotificaciones.value
+  if (showNotificaciones.value) {
+    cargarNotificaciones()
+  }
+}
+
+function irARenovacion(item) {
+  showNotificaciones.value = false
+  router.get(`/renovaciones/${item.id}`)
+}
+
+onMounted(() => {
+  cargarNotificaciones()
+  setInterval(cargarNotificaciones, 60000)
+})
 
 const isAdmin = computed(() => {
   if (!user.value?.roles) return false
@@ -107,6 +167,11 @@ const menuItems = computed(() => {
       label: 'KPIs',
       icon: 'pi pi-chart-bar',
       to: '/kpis',
+    },
+    {
+      label: 'Renovaciones',
+      icon: 'pi pi-sync',
+      to: '/renovaciones',
     },
     {
       label: 'Auditoría',

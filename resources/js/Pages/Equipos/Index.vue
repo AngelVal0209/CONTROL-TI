@@ -23,11 +23,24 @@
       <Column field="codigo" header="Código" sortable></Column>
       <Column field="serie" header="Serie" sortable></Column>
       <Column field="nombre_equipo" header="Nombre" sortable></Column>
-      <Column field="tipo" header="Tipo" sortable></Column>
-      <Column field="marca" header="Marca" sortable></Column>
+      <Column field="tipo_model.nombre" header="Tipo" sortable>
+        <template #body="{ data }">
+          {{ data.tipo_model?.nombre || data.tipo || '—' }}
+        </template>
+      </Column>
+      <Column field="marca_model.nombre" header="Marca" sortable>
+        <template #body="{ data }">
+          {{ data.marca_model?.nombre || data.marca || '—' }}
+        </template>
+      </Column>
       <Column field="area_model.nombre" header="Área" sortable>
         <template #body="{ data }">
           {{ data.area_model?.nombre || data.area || '—' }}
+        </template>
+      </Column>
+      <Column header="Tiempo de Uso" sortable>
+        <template #body="{ data }">
+          {{ calcularTiempoUso(data.fecha_adquisicion) }}
         </template>
       </Column>
       <Column field="usuario_registra.name" header="Registrado por" sortable>
@@ -103,6 +116,20 @@ function estadoSeverity(estado) {
 function condicionSeverity(condicion) {
   const map = { bueno: 'success', regular: 'warn', malo: 'danger' }
   return map[condicion] || null
+}
+
+function calcularTiempoUso(fecha) {
+  if (!fecha) return '—'
+  const adq = new Date(fecha)
+  const hoy = new Date()
+  if (adq > hoy) return '—'
+  let años = hoy.getFullYear() - adq.getFullYear()
+  let meses = hoy.getMonth() - adq.getMonth()
+  if (meses < 0) { años--; meses += 12 }
+  const partes = []
+  if (años > 0) partes.push(`${años} año${años !== 1 ? 's' : ''}`)
+  if (meses > 0) partes.push(`${meses} mes${meses !== 1 ? 'es' : ''}`)
+  return partes.length ? partes.join(', ') : '< 1 mes'
 }
 
 function applyFilters() {

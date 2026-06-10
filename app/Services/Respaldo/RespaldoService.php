@@ -128,7 +128,8 @@ class RespaldoService extends BaseService
         if (!$respaldo->archivo || !Storage::disk('local')->exists($respaldo->archivo)) {
             return back()->with('error', 'Archivo no encontrado.');
         }
-        return Storage::disk('local')->download($respaldo->archivo);
+        $filename = $respaldo->tipo . '_' . ($respaldo->equipo?->nombre_equipo ?? 'respaldo') . '.' . pathinfo($respaldo->archivo, PATHINFO_EXTENSION);
+        return Storage::disk('local')->download($respaldo->archivo, $filename);
     }
 }
 

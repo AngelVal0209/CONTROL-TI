@@ -32,22 +32,18 @@ class RespaldoCorreoController extends Controller
 
     public function show($respaldoCorreo)
     {
-        return $this->respaldoCorreoService
-            ->setModel(RespaldoCorreo::findOrFail($respaldoCorreo))
-            ->showData(RespaldoCorreo::findOrFail($respaldoCorreo));
+        return $this->respaldoCorreoService->showData(RespaldoCorreo::findOrFail($respaldoCorreo));
     }
 
     public function edit($respaldoCorreo)
     {
-        return $this->respaldoCorreoService
-            ->setModel(RespaldoCorreo::findOrFail($respaldoCorreo))
-            ->editData(RespaldoCorreo::findOrFail($respaldoCorreo));
+        return $this->respaldoCorreoService->editData(RespaldoCorreo::findOrFail($respaldoCorreo));
     }
 
     public function update(Request $request, $respaldoCorreo)
     {
         $respaldo = RespaldoCorreo::findOrFail($respaldoCorreo);
-        $this->respaldoCorreoService->setModel($respaldo)->validateAndUpdate($request, $respaldo);
+        $this->respaldoCorreoService->validateAndUpdate($request, $respaldo);
         return redirect()->route('respaldos.correos.index')
             ->with('success', 'Respaldo de correos actualizado correctamente.');
     }
@@ -55,7 +51,7 @@ class RespaldoCorreoController extends Controller
     public function destroy($respaldoCorreo)
     {
         $respaldo = RespaldoCorreo::findOrFail($respaldoCorreo);
-        $this->respaldoCorreoService->setModel($respaldo)->delete($respaldo);
+        $this->respaldoCorreoService->delete($respaldo);
         return redirect()->route('respaldos.correos.index')
             ->with('success', 'Respaldo de correos eliminado correctamente.');
     }
@@ -63,7 +59,7 @@ class RespaldoCorreoController extends Controller
     public function download($respaldoCorreo)
     {
         $respaldo = RespaldoCorreo::findOrFail($respaldoCorreo);
-        return $this->respaldoCorreoService->setModel($respaldo)->download($respaldo);
+        return $this->respaldoCorreoService->download($respaldo);
     }
 }
 
