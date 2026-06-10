@@ -45,9 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('mantenimientos', MantenimientoController::class);
 
-    Route::resource('respaldos', RespaldoController::class);
-
-    // Respaldos de Correos
+    // Respaldos de Correos (antes del resource para evitar conflicto)
     Route::get('/respaldos/correos', [RespaldoCorreoController::class, 'index'])->name('respaldos.correos.index');
     Route::get('/respaldos/correos/create', [RespaldoCorreoController::class, 'create'])->name('respaldos.correos.create');
     Route::post('/respaldos/correos', [RespaldoCorreoController::class, 'store'])->name('respaldos.correos.store');
@@ -57,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/respaldos/correos/{respaldoCorreo}', [RespaldoCorreoController::class, 'destroy'])->name('respaldos.correos.destroy');
     Route::get('/respaldos/correos/{respaldoCorreo}/download', [RespaldoCorreoController::class, 'download'])->name('respaldos.correos.download');
 
-    // Respaldos de BD
+    // Respaldos de BD (antes del resource para evitar conflicto)
     Route::get('/respaldos/bd', [RespaldoBdController::class, 'index'])->name('respaldos.bd.index');
     Route::get('/respaldos/bd/create', [RespaldoBdController::class, 'create'])->name('respaldos.bd.create');
     Route::post('/respaldos/bd', [RespaldoBdController::class, 'store'])->name('respaldos.bd.store');
@@ -66,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/respaldos/bd/{respaldoBd}', [RespaldoBdController::class, 'update'])->name('respaldos.bd.update');
     Route::delete('/respaldos/bd/{respaldoBd}', [RespaldoBdController::class, 'destroy'])->name('respaldos.bd.destroy');
     Route::get('/respaldos/bd/{respaldoBd}/download', [RespaldoBdController::class, 'download'])->name('respaldos.bd.download');
+
+    Route::resource('respaldos', RespaldoController::class);
 
     // Backup completo del sistema
     Route::get('/backup', [BackupController::class, 'index'])->name('backup.index')->middleware('role:Administrador');
